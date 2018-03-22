@@ -1,6 +1,11 @@
 #include <iostream>
 #include <stdlib.h>
 #include <tclap/CmdLine.h>
+#include <vtkUnstructuredGrid.h> 
+#include <vtkUnstructuredGridReader.h>
+#include <vtkSmartPointer.h>
+
+void main_body(const std::string &inFile);
 
 int main(int argc, char *argv[]) {
   try {
@@ -12,8 +17,24 @@ int main(int argc, char *argv[]) {
     cmd.add(outfileArg);
     cmd.add(infileArg);
     cmd.parse(argc, argv);
+
+    main_body(infileArg.getValue());
+
   } catch(TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
   }
+
   return EXIT_SUCCESS;
+}
+
+void main_body(const std::string &inFile) {
+  using MyGridPtr = vtkSmartPointer<vtkUnstructuredGrid>;
+  vtkUnstructuredGridReader *reader = vtkUnstructuredGridReader::New();
+  reader->SetFileName(inFile.c_str());
+  reader->Update();
+  vtkSmartPointer<vtkUnstructuredGrid> myGridPtr = reader->GetOutput();
+
+  std::cout << "Number of nodes: " << myGridPtr->GetNumberOfPoints() << std::endl;
+ 
+  reader->Delete();
 }
