@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.4)
 
 project(vtk2getfem)
 
-find_package(VTK 6.3 REQUIRED NO_MODULE)
+find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(VTK REQUIRED NO_MODULE)
 include(${VTK_USE_FILE})
 
 add_executable(vtk2getfem main.cpp)
