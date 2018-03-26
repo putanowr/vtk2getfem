@@ -4,12 +4,12 @@
 #ifndef VTK2GETFEM_H
 #define VTK2GETFEM_H
 
-#include <vtkSmartPointer>
-#include <vtkUnstructuredGrid>
+#include <vtkSmartPointer.h>
+#include <vtkUnstructuredGrid.h>
 #include <getfem/getfem_mesh.h>
 
 namespace v2g {
-  void copyMesh(vtkSmartPointer<vtkUnstructuredGrid> vtkGrid, 
+  void copyMesh(vtkSmartPointer<vtkUnstructuredGrid> vtkGrid,
                 getfem::mesh & gmesh);
 }
 

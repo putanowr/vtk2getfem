@@ -8,6 +8,7 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkSmartPointer.h>
 
+#include <vtk2getfem.h>
 
 INITIALIZE_EASYLOGGINGPP
 
@@ -41,6 +42,7 @@ void main_body(const std::string &inFile) {
   vtkSmartPointer<vtkUnstructuredGrid> myGridPtr = reader->GetOutput();
 
   std::cout << "Number of nodes: " << myGridPtr->GetNumberOfPoints() << std::endl;
- 
+  auto mesh = getfem::mesh();
+  v2g::copyMesh(myGridPtr, mesh);
   reader->Delete();
 }
