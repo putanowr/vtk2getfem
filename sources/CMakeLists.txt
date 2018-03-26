@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.4)
 
-project(vtk2getfem)
-
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
-find_package(VTK REQUIRED NO_MODULE)
-include(${VTK_USE_FILE})
-
-add_executable(vtk2getfem main.cpp)
+add_executable(vtk2getfem
+  main.cpp
+  external/logging/easyloggingpp/easylogging++.cc
+)
 
 target_include_directories(vtk2getfem 
   PRIVATE
-    ${PROJECT_SOURCE_DIR}/cli
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/cli
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/logging/easyloggingpp
 )
 
 target_link_libraries(vtk2getfem ${VTK_LIBRARIES})

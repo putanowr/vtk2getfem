@@ -1,9 +1,15 @@
 #include <iostream>
 #include <stdlib.h>
+
 #include <tclap/CmdLine.h>
+#include <easylogging++.h>
+
 #include <vtkUnstructuredGrid.h> 
 #include <vtkUnstructuredGridReader.h>
 #include <vtkSmartPointer.h>
+
+
+INITIALIZE_EASYLOGGINGPP
 
 void main_body(const std::string &inFile);
 
