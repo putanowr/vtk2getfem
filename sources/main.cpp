@@ -18,6 +18,7 @@ public:
   void parseCmdArgs(int argc, char *argv[]);
 
   std::string inFile;
+  bool writeInfo = false;
 };
 
 void Config::parseCmdArgs(int argc, char *argv[])
@@ -25,12 +26,14 @@ void Config::parseCmdArgs(int argc, char *argv[])
   TCLAP::CmdLine cmd("Convert VTK to GMSH file", ' ', "0.1");
   TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", false,"v2g.dat","string");
   TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name", true, "", "string");
-  TCLAP::SwitchArg meshinfoArge("i", "meshinfo", "print mesh info", false);
+  TCLAP::SwitchArg meshInfoArg("i", "meshinfo", "print mesh info", false);
   cmd.add(outfileArg);
   cmd.add(infileArg);
+  cmd.add(meshInfoArg);
   cmd.parse(argc, argv);
 
   inFile = infileArg.getValue();
+  writeInfo = meshInfoArg.getValue();
 }
 
 void main_body(const Config &myConfig);
@@ -54,7 +57,9 @@ void main_body(const Config &myConfig) {
   reader->Update();
   vtkSmartPointer<vtkUnstructuredGrid> myGridPtr = reader->GetOutput();
 
-  v2g::writeInfo(std::cout, myGridPtr);
+  if (myConfig.writeInfo) {
+    v2g::writeInfo(std::cout, myGridPtr);
+  }
 
   auto mesh = getfem::mesh();
   v2g::copyMesh(myGridPtr, mesh);
