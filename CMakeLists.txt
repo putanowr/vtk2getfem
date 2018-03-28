@@ -19,6 +19,8 @@ find_package(GetFEM REQUIRED)
 
 include(${VTK_USE_FILE})
 
+enable_testing()
+
 add_subdirectory(sources)
 add_subdirectory(tests)
 add_subdirectory(docs)
