@@ -8,40 +8,54 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkSmartPointer.h>
 
-#include <vtk2getfem.h>
+#include "vtk2getfem.h"
+#include "info.h" 
 
 INITIALIZE_EASYLOGGINGPP
 
-void main_body(const std::string &inFile);
+class Config {
+public:
+  void parseCmdArgs(int argc, char *argv[]);
+
+  std::string inFile;
+};
+
+void Config::parseCmdArgs(int argc, char *argv[])
+{
+  TCLAP::CmdLine cmd("Convert VTK to GMSH file", ' ', "0.1");
+  TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", false,"v2g.dat","string");
+  TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name", true, "", "string");
+  TCLAP::SwitchArg meshinfoArge("i", "meshinfo", "print mesh info", false);
+  cmd.add(outfileArg);
+  cmd.add(infileArg);
+  cmd.parse(argc, argv);
+
+  inFile = infileArg.getValue();
+}
+
+void main_body(const Config &myConfig);
 
 int main(int argc, char *argv[]) {
-  try {
-    TCLAP::CmdLine cmd("Convert VTK to GMSH file", ' ', "0.1");
-    TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", 
-                                            false,"v2g.dat","string");
-    TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name",
-                                            true, "", "string");
-    cmd.add(outfileArg);
-    cmd.add(infileArg);
-    cmd.parse(argc, argv);
-
-    main_body(infileArg.getValue());
-
+ Config myConfig;
+ try {
+   myConfig.parseCmdArgs(argc, argv);
   } catch(TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
   }
 
+  main_body(myConfig);
   return EXIT_SUCCESS;
 }
 
-void main_body(const std::string &inFile) {
+void main_body(const Config &myConfig) {
   using MyGridPtr = vtkSmartPointer<vtkUnstructuredGrid>;
   vtkUnstructuredGridReader *reader = vtkUnstructuredGridReader::New();
-  reader->SetFileName(inFile.c_str());
+  reader->SetFileName(myConfig.inFile.c_str());
   reader->Update();
   vtkSmartPointer<vtkUnstructuredGrid> myGridPtr = reader->GetOutput();
 
-  std::cout << "Number of nodes: " << myGridPtr->GetNumberOfPoints() << std::endl;
+  v2g::writeInfo(std::cout, myGridPtr);
+
   auto mesh = getfem::mesh();
   v2g::copyMesh(myGridPtr, mesh);
   reader->Delete();
