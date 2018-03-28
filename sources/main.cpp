@@ -18,6 +18,7 @@ public:
   void parseCmdArgs(int argc, char *argv[]);
 
   std::string inFile;
+  bool noLog = false;
   bool writeInfo = false;
 };
 
@@ -27,16 +28,20 @@ void Config::parseCmdArgs(int argc, char *argv[])
   TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", false,"v2g.dat","string");
   TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name", true, "", "string");
   TCLAP::SwitchArg meshInfoArg("i", "meshinfo", "print mesh info", false);
+  TCLAP::SwitchArg noLogArg("s", "nolog", "switch off log messages", false);
   cmd.add(outfileArg);
   cmd.add(infileArg);
   cmd.add(meshInfoArg);
+  cmd.add(noLogArg);
   cmd.parse(argc, argv);
 
   inFile = infileArg.getValue();
   writeInfo = meshInfoArg.getValue();
+  noLog = noLogArg.getValue();
 }
 
 void main_body(const Config &myConfig);
+void setup_logging(const Config &myConfig);
 
 int main(int argc, char *argv[]) {
  Config myConfig;
@@ -45,9 +50,19 @@ int main(int argc, char *argv[]) {
   } catch(TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
   }
-
+  setup_logging(myConfig);
   main_body(myConfig);
   return EXIT_SUCCESS;
+}
+
+void setup_logging(const Config &myConfig)
+{
+  if (myConfig.noLog) {
+    el::Configurations defaultConf;
+    defaultConf.setToDefault();
+    defaultConf.set(el::Level::Global, el::ConfigurationType::Enabled, std::string("false"));
+    el::Loggers::reconfigureLogger("default", defaultConf);
+  }
 }
 
 void main_body(const Config &myConfig) {
