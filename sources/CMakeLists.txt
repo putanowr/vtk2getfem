@@ -2,8 +2,10 @@ cmake_minimum_required(VERSION 3.4)
 
 add_executable(vtk2getfem
   external/logging/easyloggingpp/easylogging++.cc
+  export.cpp
   info.cpp
   main.cpp
+  manager.cpp
   vtk2getfem.cpp
 )
 
