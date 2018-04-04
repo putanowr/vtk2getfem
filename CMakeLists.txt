@@ -22,6 +22,6 @@ include(${VTK_USE_FILE})
 
 enable_testing()
 
-add_subdirectory(sources)
-add_subdirectory(tests)
 add_subdirectory(docs)
+add_subdirectory(src)
+add_subdirectory(tests)
