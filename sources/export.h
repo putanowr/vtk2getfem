@@ -11,7 +11,9 @@ namespace getfem
 namespace v2g 
 {
 class Manager;
+class Model;
 
-void exportMesh(const Manager &myManager, const getfem::mesh &);
+void exportData(const Manager &myManager, const getfem::mesh &mesh);
+void exportData(const Manager &myManager, const Model &model);
 
 } // namespace v2g
