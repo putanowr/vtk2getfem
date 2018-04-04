@@ -19,10 +19,10 @@ public:
   Model();
   getfem::mesh &getMesh() { return mesh_; }
   const getfem::mesh &getMesh() const { return mesh_;}
-  const getfem::mesh_fem &getFem(const std::string &name) const { return model_.mesh_fem_of_variable(name); }
+  const getfem::mesh_fem &getFem() const { return fem_; }
   const Vector & getDOFs(const std::string &name) const { return model_.real_variable(name); }
   void interpolate(const GlobalFunction &fun);
-  
+  void variable_list(getfem::model::varnamelist &vl) const { model_.variable_list(vl); }  
 private:
   getfem::mesh mesh_;
   getfem::mesh_fem fem_;

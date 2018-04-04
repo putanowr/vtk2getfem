@@ -9,15 +9,19 @@
 namespace v2g 
 {
 
-Model::Model() :  fem_(mesh_)
+Model::Model() : fem_(mesh_)
 {
   fem_.set_classical_finite_element(1);
-  model_.add_fem_variable("data", fem_); 
 }
 
 void Model::interpolate(const GlobalFunction &fun)
 {
-  getfem::interpolation_function(fem_, model_.real_variable("data"), fun);
+  auto name = fun.name();
+  if (!model_.variable_exists(name))
+  {
+    model_.add_fem_variable(name, fem_); 
+  }
+  getfem::interpolation_function(fem_, model_.real_variable(name), fun);
 }
 
 } // namespace v2g

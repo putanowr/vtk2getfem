@@ -60,22 +60,17 @@ bool Manager::parseCmdArgs(int argc, char *argv[])
   auto isOK = true;
   try {
     TCLAP::CmdLine cmd("Convert VTK to GMSH file", ' ', "0.1");
-    TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", false,"v2g.dat","string");
-    TCLAP::ValueArg<FieldDef>     fieldArg("f", "field", "field", false, FieldDef{}, "FieldArg");
-    TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name", true, "", "string");
-    TCLAP::SwitchArg meshInfoArg("i", "meshinfo", "print mesh info", false);
-    TCLAP::SwitchArg noLogArg("s", "nolog", "switch off log messages", false);
-    cmd.add(outfileArg);
-    cmd.add(infileArg);
-    cmd.add(meshInfoArg);
-    cmd.add(noLogArg);
-    cmd.add(fieldArg);
+    TCLAP::ValueArg<std::string> outfileArg("o", "outfile", "output file name", false,"v2g.dat","string", cmd);
+    TCLAP::MultiArg<FieldDef>     fieldArg("f", "field", "field", false, "FieldDef", cmd);
+    TCLAP::UnlabeledValueArg<std::string> infileArg("infile", "input file name", true, "", "string", cmd);
+    TCLAP::SwitchArg meshInfoArg("i", "meshinfo", "print mesh info", cmd, false);
+    TCLAP::SwitchArg noLogArg("s", "nolog", "switch off log messages",cmd,  false);
     cmd.parse(argc, argv);
 
     inFile = infileArg.getValue();
     writeInfo = meshInfoArg.getValue();
     noLog = noLogArg.getValue();
-    field = fieldArg.getValue();
+    fields = fieldArg.getValue();
 
   } catch(TCLAP::ArgException &e) {
     std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;

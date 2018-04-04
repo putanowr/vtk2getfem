@@ -21,12 +21,16 @@ void exportData(const Manager &myManager, const getfem::mesh &mesh)
 
 void exportData(const Manager &myManager, const Model &model)
 {
-  auto fieldName = std::string("data");
   LOG(INFO) << "Exporting model" << std::endl;
   auto exporter = getfem::vtk_export("out.vtk", true);
-  auto fem = model.getFem(fieldName);
+  auto fem = model.getFem();
   exporter.exporting(fem);
-  exporter.write_point_data(fem, model.getDOFs(fieldName), fieldName);
+  getfem::model::varnamelist variables;
+  model.variable_list(variables);
+  for (auto &name : variables)
+  {
+     exporter.write_point_data(fem, model.getDOFs(name), name);
+  }
 }
 
 } // namespace v2g
