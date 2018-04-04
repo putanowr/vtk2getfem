@@ -8,28 +8,26 @@
 namespace v2g 
 {
 
+GlobalFunction::GlobalFunction(const std::string &name, 
+                               const std::string &expression) : name_(name)
+{
+  parser_.DefineVar("x", &pt_[0]);
+  parser_.DefineVar("y", &pt_[1]);
+  parser_.DefineVar("z", &pt_[2]);
+  parser_.SetExpr(expression);
+}
+
 double GlobalFunction::at(double x, double y, double z) const
 {
-  return x;
+  pt_[0] = x;
+  pt_[1] = y;
+  pt_[2] = z;
+  return parser_.Eval();
 }
 
 double GlobalFunction::at(size_t ncoords, const double *coords) const
 {
-  if (ncoords == 2)
-  {
-    return at(coords[0], coords[1], 0.0);
-  }
-  else if (ncoords == 3)
-  {
-    return at(coords[0], coords[2], coords[3]);
-  }
-  else if (ncoords == 1)
-  {
-    return at(coords[0], 0.0, 0.0);
-  }
-  else
-  {
-    throw std::logic_error("Invalid point dimension != 1;2 or 3");
-  } 
+  for (size_t i=0; i<ncoords; ++i) pt_[i] = coords[i];
+  return parser_.Eval();
 }
 } // namespace v2g
