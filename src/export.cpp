@@ -23,13 +23,20 @@ void exportData(const Manager &myManager, const Model &model)
 {
   LOG(INFO) << "Exporting model" << std::endl;
   auto exporter = getfem::vtk_export("out.vtk", true);
-  auto fem = model.getFem();
-  exporter.exporting(fem);
   getfem::model::varnamelist variables;
   model.variable_list(variables);
-  for (auto &name : variables)
+  if (variables.empty())
   {
-     exporter.write_point_data(fem, model.getDOFs(name), name);
+    exportData(myManager, model.getMesh());
+  }
+  else
+  {
+    auto fem = model.getFem();
+    exporter.exporting(fem);
+    for (auto &name : variables)
+    {
+       exporter.write_point_data(fem, model.getDOFs(name), name);
+    }
   }
 }
 
