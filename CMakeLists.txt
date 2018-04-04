@@ -16,6 +16,7 @@ set (CMAKE_CXX_STANDARD 11)
 find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
 find_package(VTK REQUIRED NO_MODULE)
 find_package(GetFEM REQUIRED)
+find_package(MuParser REQUIRED)
 
 include(${VTK_USE_FILE})
 

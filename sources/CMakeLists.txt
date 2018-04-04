@@ -17,6 +17,7 @@ target_include_directories(vtk2getfem
     ${CMAKE_CURRENT_SOURCE_DIR}/external/cli
     ${CMAKE_CURRENT_SOURCE_DIR}/external/logging/easyloggingpp
     ${GETFEM_INCLUDE_DIR}
+    ${MUPARSER_INCLUDE_DIR}
 )
 
-target_link_libraries(vtk2getfem ${VTK_LIBRARIES} ${GETFEM_LIBRARY})
+target_link_libraries(vtk2getfem ${VTK_LIBRARIES} ${GETFEM_LIBRARY} ${MUPARSER_LIBRARIES} )
