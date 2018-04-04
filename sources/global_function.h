@@ -10,13 +10,13 @@ namespace v2g
 class GlobalFunction
 {
 public:
-  GlobalFunction();
+  GlobalFunction() = default;
   double at(double x, double y, double z) const;
   double at(size_t ncoords, const double *coords) const;
-  template <class T>
+  template <typename T>
   double operator ()(const T &point) const
   {
-    return at(point.size(), &(point[0]));
+    return at(point[0], point[1], point[2]);
   }
 };
 } // namespace v2g
