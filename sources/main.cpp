@@ -54,7 +54,7 @@ void main_body(const v2g::Manager &myManager) {
 
   auto model = v2g::Model();
   v2g::copyMesh(myGridPtr, model.getMesh());
-  v2g::GlobalFunction fun;
+  v2g::GlobalFunction fun(myManager.field.name, myManager.field.expression);
   model.interpolate(fun);
   v2g::exportData(myManager, model);
   reader->Delete();
