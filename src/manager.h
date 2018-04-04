@@ -4,6 +4,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace v2g 
 {
@@ -26,7 +27,7 @@ public:
   bool parseCmdArgs(int argc, char *argv[]);
 
   std::string inFile;
-  FieldDef field;
+  std::vector<FieldDef> fields;
   bool noLog = false;
   bool writeInfo = false;
   int exitStatus = EXIT_SUCCESS;
