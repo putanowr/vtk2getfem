@@ -9,8 +9,10 @@
 #include <vtkSmartPointer.h>
 
 #include "export.h"
+#include "global_function.h"
 #include "info.h" 
 #include "manager.h"
+#include "model.h"
 #include "vtk2getfem.h"
 
 INITIALIZE_EASYLOGGINGPP
@@ -50,8 +52,10 @@ void main_body(const v2g::Manager &myManager) {
     v2g::writeInfo(std::cout, myGridPtr);
   }
 
-  auto mesh = getfem::mesh();
-  v2g::copyMesh(myGridPtr, mesh);
-  v2g::exportMesh(myManager, mesh);
+  auto model = v2g::Model();
+  v2g::copyMesh(myGridPtr, model.getMesh());
+  v2g::GlobalFunction fun;
+  model.interpolate(fun);
+  v2g::exportData(myManager, model);
   reader->Delete();
 }
